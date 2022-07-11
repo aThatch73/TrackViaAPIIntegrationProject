@@ -1,0 +1,6 @@
+/**
+ * @swagger
+ *  tags:
+ *    name: Posts
+ *    description: posts of users
+ */
