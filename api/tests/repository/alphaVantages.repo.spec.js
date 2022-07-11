@@ -4,7 +4,7 @@ const sinon = require('sinon');
 
 const request = require('request');
 
-const AlphaVantageRepo = require('../../repository/alphaVantage.repo');
+const AlphaVantageRepo = require('../../repository/AlphaVantage.repo');
 
 const { expect } = chai;
 

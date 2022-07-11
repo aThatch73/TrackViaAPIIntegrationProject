@@ -2,7 +2,7 @@ require('mocha');
 const chai = require('chai');
 const sinon = require('sinon');
 
-const ForeignExchangeService = require('../../services/foreignExchange.service');
+const ForeignExchangeService = require('../../services/ForeignExchange.service');
 
 const { expect } = chai;
 

@@ -2,8 +2,8 @@ require('mocha');
 const chai = require('chai');
 const sinon = require('sinon');
 
-const AlphaVantageRepo = require('../../repository/alphaVantage.repo');
-const AlphaVantageService = require('../../services/alphaVantage.service');
+const AlphaVantageRepo = require('../../repository/AlphaVantage.repo');
+const AlphaVantageService = require('../../services/AlphaVantage.service');
 
 const { expect } = chai;
 

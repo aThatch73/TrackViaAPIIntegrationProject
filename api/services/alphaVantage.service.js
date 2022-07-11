@@ -1,4 +1,4 @@
-const AlphaVantageRepo = require('../repository/alphaVantage.repo');
+const AlphaVantageRepo = require('../repository/AlphaVantage.repo');
 const configs = require('../../config/config').configs;
 
 class AlphaVantageService {

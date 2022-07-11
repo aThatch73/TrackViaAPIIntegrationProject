@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const ForeignExchangeService = require('../services/foreignExchange.service');
+const ForeignExchangeService = require('../services/ForeignExchange.service');
 
 router.get('/currencyExchangeRates/:fromCurrency/:toCurrency', async (req, res) => {
     const functionName = 'CURRENCY_EXCHANGE_RATE';

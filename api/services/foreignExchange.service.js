@@ -1,4 +1,4 @@
-const AlphaVantageService = require('./alphaVantage.service');
+const AlphaVantageService = require('./AlphaVantage.service');
 const utils = require('../utils/utils');
 
 class ForeignExchangeService extends AlphaVantageService {
