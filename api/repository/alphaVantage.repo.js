@@ -14,8 +14,9 @@ class AlphaVantageRepo {
           }, (err, res) => {
             if (err) {
                 callback(err, null);
+            } else {
+                callback(null, res);
             }
-            callback(null, res);
         });
     }
 

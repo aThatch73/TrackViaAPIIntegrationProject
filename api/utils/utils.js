@@ -1,21 +1,24 @@
-const generateUrl = function (hostname, functionName, parameters) {
-    let url = `${hostname}/query?function=${functionName}`;
+const generateUrl = function (hostname, functionName, params, query) {
+    const urlBase = `${hostname}/query?function=${functionName}`;
+    const url = appendParametersToUrl(urlBase, params);
 
-    Object.keys(parameters).filter(param => !!parameters[param]).forEach(param => {
-      url = `${url}&${param}=${parameters[param]}`
+    return appendParametersToUrl(url, query);
+};
+
+const appendParametersToUrl = function (url, params) {
+    Object.keys(params).filter(p => !!params[p]).forEach(p => {
+        url = `${url}&${convertCamelCaseToSnakeCase(p)}=${params[p]}`
     });
 
     return url;
-};
+}
 
-const satisfiesMinimumRequiredQueryParameters = function (requiredQueryParams, suppliedQueryParams) {
-    if (requiredQueryParams.every(q => Object.keys(suppliedQueryParams).includes(q))) {
-        return true;
-    }
-    return false;
-};
+const convertCamelCaseToSnakeCase = function (paramName) {
+    return paramName.replace(/[A-Z]/g, char => `_${char.toLowerCase()}`);
+}
 
 module.exports = {
     generateUrl,
-    satisfiesMinimumRequiredQueryParameters
+    appendParametersToUrl,
+    convertCamelCaseToSnakeCase
 }

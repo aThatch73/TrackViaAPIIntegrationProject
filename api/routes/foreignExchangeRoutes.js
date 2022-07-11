@@ -1,16 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-const utils = require('../utils/utils');
 const ForeignExchangeService = require('../services/foreignExchange.service');
 
-router.get('/currencyExchangeRates', async (req, res) => {
+router.get('/currencyExchangeRates/:fromCurrency/:toCurrency', async (req, res) => {
     const functionName = 'CURRENCY_EXCHANGE_RATE';
-    const foreignExchangeService = new ForeignExchangeService(functionName, req.query);
-
-    if (!utils.satisfiesMinimumRequiredQueryParameters(foreignExchangeService.requiredQueryParams, req.query)) {
-        return res.send(`[Error]: Request missing one of the following query parameters: [${foreignExchangeService.requiredQueryParams.join(', ')}]`);
-    }
+    const foreignExchangeService = new ForeignExchangeService(functionName, req.params, req.query);
 
     try {
         const currencyExchangeRatesResponse = await foreignExchangeService.getCurrencyExchangeRates();
@@ -21,17 +16,13 @@ router.get('/currencyExchangeRates', async (req, res) => {
     }
 });
 
-router.get('/fxIntraday', async (req, res) => {
+router.get('/fxIntraday/:fromSymbol/:toSymbol/:interval', async (req, res) => {
     const functionName = 'FX_INTRADAY';
-    const foreignExchangeService = new ForeignExchangeService(functionName, req.query);
-
-    if (!utils.satisfiesMinimumRequiredQueryParameters(foreignExchangeService.requiredQueryParams, req.query)) {
-        return res.send(`[Error]: Request missing one of the following query parameters: [${foreignExchangeService.requiredQueryParams.join(', ')}]`);
-    }
+    const foreignExchangeService = new ForeignExchangeService(functionName, req.params, req.query);
 
     try {
-        const currencyExchangeRatesResponse = await foreignExchangeService.getFXIntradayTimeSeries();
-        res.json(currencyExchangeRatesResponse);
+        const fxIntradayTimeSeriesResponse = await foreignExchangeService.getFXIntradayTimeSeries();
+        res.json(fxIntradayTimeSeriesResponse);
     } catch (err) {
         console.error(`[Error]: ${err}`);
         res.send(`[Error]: ${err}`);
