@@ -15,28 +15,29 @@
  *          '7. Time Zone': 'UTC'
  *          '8. Bid Price': '20045.67000000'
  *          '9. Ask Price': '20047.41000000'
- *     FX Intraday Time Series:
+ *     FX Intraday Time Series Data Points:
  *       type: object
  *       example:
- *         'Meta Data':
- *          '1. Information': 'FX Intraday (5min) Time Series'
- *          '2. From Symbol': 'EUR'
- *          '3. To Symbol': 'USD'
- *          '4. Last Refreshed': '2022-07-11 23:25:00'
- *          '5. Interval': '5min'
- *          '6. Output Size': 'Compact'
- *          '7. Time Zone': 'UTC'
- *          'Time Series FX (5min)':
- *              '2022-07-11 23:25:00':
- *                  '1. open': '1.00460'
- *                  '2. high': '1.00466'
- *                  '3. low': '1.00430'
- *                  '4. close': '1.00430'
- *              '2022-07-11 23:20:00':
- *                  '1. open': '1.00457'
- *                  '2. high': '1.00468'
- *                  '3. low': '1.00440'
- *                  '4. close': '1.00440'
+ *         'open':
+ *          - '1657611000': '1.00112'
+ *          - '1657610700': '1.00072'
+ *          - '1657610400': '1.00111'
+ *          - '1657610100': '1.00158'
+ *         'high':
+ *          - '1657611000': '1.00151'
+ *          - '1657610700': '1.00133'
+ *          - '1657610400': '1.00145'
+ *          - '1657610100': '1.00173'
+ *         'low':
+ *          - '1657611000': '1.00050'
+ *          - '1657610700': '1.00050'
+ *          - '1657610400': '1.00030'
+ *          - '1657610100': '1.00030'
+ *         'close':
+ *          - '1657611000': '1.00094'
+ *          - '1657610700': '1.00114'
+ *          - '1657610400': '1.00076'
+ *          - '1657610100': '1.00110'
  */
 
  /**
@@ -64,11 +65,11 @@
   *           application/json:
   *             schema:
   *               $ref: '#/components/schemas/Currency Exchange Rates'
-  * fxIntraday:
-  * /av/fx/fxIntraday/{fromSymbol}/{toSymbol}/{interval}:
+  * fxIntradayTimeSeriesDataPoints:
+  * /av/fx/fxIntradayTimeSeriesDataPoints/{fromSymbol}/{toSymbol}/{interval}:
   *   get:
-  *     summary: Gets Currency Exchange Rates for given parameters
-  *     tags: [Currency Exchange Rates]
+  *     summary: Gets FX Intraday Time Series Data Points for given parameters
+  *     tags: [FX Intraday Time Series Data Points]
   *     parameters:
   *         - in: path
   *           name: fromSymbol
@@ -87,11 +88,11 @@
   *           description: the interval on which to build the time series
   *     responses:
   *       200:
-  *         description: The FX Intraday Time Series.
+  *         description: The FX Intraday Time Series Data Points.
   *         content:
   *           application/json:
   *             schema:
-  *               $ref: '#/components/schemas/FX Intraday Time Series'
+  *               $ref: '#/components/schemas/FX Intraday Time Series Data Points'
  */
  
 const express = require('express');
@@ -114,7 +115,7 @@ router.get('/currencyExchangeRates/:fromCurrency/:toCurrency', async (req, res) 
     }
 });
 
-router.get('/fxIntraday/:fromSymbol/:toSymbol/:interval', async (req, res) => {
+router.get('/fxIntradayTimeSeriesDataPoints/:fromSymbol/:toSymbol/:interval', async (req, res) => {
     const functionName = 'FX_INTRADAY';
     const foreignExchangeService = new ForeignExchangeService(functionName, req.params, req.query);
 
@@ -122,8 +123,8 @@ router.get('/fxIntraday/:fromSymbol/:toSymbol/:interval', async (req, res) => {
         const fxIntradayTimeSeriesResponse = await foreignExchangeService.getFXIntradayTimeSeries();
         res.json(fxIntradayTimeSeriesResponse);
     } catch (err) {
-        logger.error(`${configs.baseErrorMessage}FX Intraday Time Series Error: ${err}`);
-        res.send(`${configs.baseErrorMessage}FX Intraday Time Series Error: ${err}`);
+        logger.error(`${configs.baseErrorMessage}FX Intraday Time Series Data Points Error: ${err}`);
+        res.send(`${configs.baseErrorMessage}FX Intraday Time Series Data Points Error: ${err}`);
     }
 });
 

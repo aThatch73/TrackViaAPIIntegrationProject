@@ -20,7 +20,7 @@ describe('routeValidationMiddleware', () => {
             try {
                 routeValidationMiddleware.noRouteHandler(req);
             } catch (err) {
-                expect(err).to.equal('[Error]: 404 - No route');
+                expect(err).to.equal('[Error][TrackVia - AlphaVantage Integration API]: 404 - No route');
             }
         });
     });

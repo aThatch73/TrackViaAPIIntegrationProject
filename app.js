@@ -1,5 +1,6 @@
 require('dotenv').config();
 const express = require('express');
+const forever = require('forever-monitor')
 const fs = require('fs');
 const https = require('https');
 const logger = require('loglevel');
@@ -37,4 +38,28 @@ const server = https.createServer({
 const port = configs.port || 8800;
 server.listen(port, () => {
     logger.info(`[TrackVia - AlphaVantage Integration API]: Server Ready - Listening on port ${port}`)
+});
+
+const child = new (forever.Monitor)('./app.js', {
+    silent: false,
+    command: 'node',
+    killTree: true
+});
+
+child.on('restart', () => {
+    logger.info('[TrackVia - AlphaVantage Integration API]: Server Restarted ');
+});
+
+child.on('exit', () => {
+    logger.info('[TrackVia - AlphaVantage Integration API]: Server closed. Restarting...');
+});
+
+process.on('unhandledRejection', (err, promise) => {
+    logger.error(`${configs.baseErrorMessage}Unhandled Rejection - ${err}`);
+    throw err;
+});
+    
+process.on('uncaughtException', (err) => {
+    logger.error(`${configs.baseErrorMessage}Uncaught Exception - ${err}`);
+    throw err;
 });
