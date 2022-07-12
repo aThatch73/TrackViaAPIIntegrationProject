@@ -40,33 +40,34 @@ class ForeignExchangeService extends AlphaVantageService {
     }
   }
 
-  initializeDataPointsMap() {
+  initializeFXIntradayTimeSeriesDataPoints() {
     return { open: [], high: [], low: [], close: [] }
   }
 
-  mapRawCurrencyExchangeRateToCurrencyExchangeRateResponse() {
+  mapRawCurrencyExchangeRateDataToCurrencyExchangeRateResponse(currencyExchangeRateRawData) {
     const currencyExchangeRateResponse = {};
-    const currencyExchangeRateRawData = this.currencyExchangeRateRawData['Realtime Currency Exchange Rate'];
+    const currencyExchangeRateRawDataObject = currencyExchangeRateRawData['Realtime Currency Exchange Rate'];
 
     Object.keys(this.currencyExchangeRatesFieldsMap).forEach(key => {
-      const value = currencyExchangeRateRawData[this.currencyExchangeRatesFieldsMap[key]];
+      const value = currencyExchangeRateRawDataObject[this.currencyExchangeRatesFieldsMap[key]];
       currencyExchangeRateResponse[key] = this.formatCurrencyExchangeRateValue(key, value);
     });
     
     return currencyExchangeRateResponse;
   }
 
-  mapRawFXIntradayTimeSeriesPoint(timeSeriesRawData, dataPoints, datetime) {
+  mapRawFXIntradayTimeSeriesPoint(fxIntradayTimeSeriesRawData, dataPoints, datetime) {
     const timestamp = moment.utc(datetime).format('X');
+
     Object.keys(dataPoints).forEach(dataType => {
-      dataPoints[dataType].push({ [timestamp]: parseFloat(timeSeriesRawData[datetime][this.fxIntradayTimeSeriesFieldsMap[dataType]]) });
+      dataPoints[dataType].push({ [timestamp]: parseFloat(fxIntradayTimeSeriesRawData[datetime][this.fxIntradayTimeSeriesFieldsMap[dataType]]) });
     });
   }
 
-  mapRawFXIntradayTimeSeriesDataToDataPoints() {
-    const dataPoints = this.initializeDataPointsMap();
-    const timeSeriesKey = Object.keys(this.fxIntradayTimeSeriesRawData).find(key => key.includes('Time Series FX'));
-    const timeSeriesRawData = this.fxIntradayTimeSeriesRawData[timeSeriesKey];
+  mapRawFXIntradayTimeSeriesDataToDataPoints(fxIntradayTimeSeriesRawData) {
+    const dataPoints = this.initializeFXIntradayTimeSeriesDataPoints();
+    const timeSeriesKey = Object.keys(fxIntradayTimeSeriesRawData).find(key => key.includes('Time Series FX'));
+    const timeSeriesRawData = fxIntradayTimeSeriesRawData[timeSeriesKey];
 
     Object.keys(timeSeriesRawData).forEach(datetime => {
       this.mapRawFXIntradayTimeSeriesPoint(timeSeriesRawData, dataPoints, datetime);
@@ -79,18 +80,18 @@ class ForeignExchangeService extends AlphaVantageService {
     const functionName = 'CURRENCY_EXCHANGE_RATE';
     const url = utils.generateUrl(this.hostname, functionName, this.query, this.params);
 
-    this.currencyExchangeRateRawData = await this.getAlphaVantageResponse(url);
+    const currencyExchangeRateRawData = await this.getAlphaVantageResponse(url);
 
-    return this.mapRawCurrencyExchangeRateToCurrencyExchangeRateResponse();
+    return this.mapRawCurrencyExchangeRateDataToCurrencyExchangeRateResponse(currencyExchangeRateRawData);
   }
   
   async getFXIntradayTimeSeries() {
     const functionName = 'FX_INTRADAY';
     const url = utils.generateUrl(this.hostname, functionName, this.query, this.params);
 
-    this.fxIntradayTimeSeriesRawData = await this.getAlphaVantageResponse(url);
+    const fxIntradayTimeSeriesRawData = await this.getAlphaVantageResponse(url);
 
-    return this.mapRawFXIntradayTimeSeriesDataToDataPoints();
+    return this.mapRawFXIntradayTimeSeriesDataToDataPoints(fxIntradayTimeSeriesRawData);
   }
 }
 

@@ -17,12 +17,12 @@ describe('foreignExchangeRoutes', () => {
             });
         });
         
-        describe('/fxIntraday/:fromSymbol/:toSymbol/:interval', () => {
-            it('should have route /fxIntraday/:fromSymbol/:toSymbol/:interval', () => {
-                expect(foreignExchangeRoutes.stack.some((s) => s.route.path === '/fxIntraday/:fromSymbol/:toSymbol/:interval')).to.equal(true);
+        describe('/fxIntradayTimeSeriesDataPoints/:fromSymbol/:toSymbol/:interval', () => {
+            it('should have route /fxIntradayTimeSeriesDataPoints/:fromSymbol/:toSymbol/:interval', () => {
+                expect(foreignExchangeRoutes.stack.some((s) => s.route.path === '/fxIntradayTimeSeriesDataPoints/:fromSymbol/:toSymbol/:interval')).to.equal(true);
             });
             
-            it('should have a GET method on route /fxIntraday/:fromSymbol/:toSymbol/:interval', () => {
+            it('should have a GET method on route /fxIntradayTimeSeriesDataPoints/:fromSymbol/:toSymbol/:interval', () => {
                 expect(foreignExchangeRoutes.stack.some((s) => Object.keys(s.route.methods).includes('get'))).to.equal(true)
             });
         });
